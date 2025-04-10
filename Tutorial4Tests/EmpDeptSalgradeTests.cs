@@ -112,8 +112,13 @@ public class EmpDeptSalgradeTests
         var emps = Database.GetEmps();
         var grades = Database.GetSalgrades();
 
-        var result = emps.SelectMany(e => grades.Where(g => e.Sal >= g.Losal && e.Sal <= g.Hisal)
-                .Select(g => new { e.EName, g.Grade })).ToList();
+        var result = emps.Join(grades,
+                e => true,
+                g => true,
+                (e, g) => new { e, g })
+            .Where(joined => joined.e.Sal >= joined.g.Losal && joined.e.Sal <= joined.g.Hisal)
+            .Select(joined => new { joined.e.EName, joined.g.Grade })
+            .ToList();
         
         Assert.Contains(result, r => r.EName == "ALLEN" && r.Grade == 3);
     }
