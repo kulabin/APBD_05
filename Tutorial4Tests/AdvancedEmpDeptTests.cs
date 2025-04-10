@@ -126,8 +126,8 @@ public class AdvancedEmpDeptTests
                 (e, d) => new { Employee = e, Department = d })
             .Join(grades, ed => true, s => true,
                 (ed, s) => new { ed.Employee, ed.Department, Grade = s })
-            .Where(x => x.Employee.Sal >= x.Grade.Losal && x.Employee.Sal <= x.Grade.Hisal)
-            .Select(x => new { EName = x.Employee.EName, DName = x.Department.DName, x.Grade.Grade })
+            .Where(joined => joined.Employee.Sal >= joined.Grade.Losal && joined.Employee.Sal <= joined.Grade.Hisal)
+            .Select(joined => new { EName = joined.Employee.EName, DName = joined.Department.DName, joined.Grade.Grade })
             .ToList();
         
         Assert.Contains(result, r => r.EName == "ALLEN" && r.DName == "SALES" && r.Grade == 3);
